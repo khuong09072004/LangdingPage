@@ -4,7 +4,7 @@
     <header class="header" :class="{ scrolled: isScrolled }">
       <div class="container">
         <div class="logo">
-          <span class="logo-text">NekSoluton</span>
+          <span class="logo-text">NekSolution</span>
         </div>
         <nav class="nav">
           <a href="#home" @click.prevent="scrollToSection('home')">Home</a>    
@@ -493,17 +493,7 @@ export default {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
 
-body {
-  font-family: 'BoldenVan', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 .featured-games {
   background: #0a0a0f;

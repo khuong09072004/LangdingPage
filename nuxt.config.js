@@ -35,7 +35,7 @@ export default {
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ["aos/dist/aos.css"],
+  css: ["aos/dist/aos.css",'@/assets/css/global.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
