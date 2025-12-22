@@ -351,35 +351,33 @@ export default {
     const ScrollTrigger = this.$ScrollTrigger;
 
     if (gsap && ScrollTrigger) {
-      // Wait for next tick to ensure DOM is ready
+
       this.$nextTick(() => {
-        // Smooth parallax for hero background
-        gsap.to(".hero-bg", {
+        // Create timeline for hero parallax with better control
+        const heroTimeline = gsap.timeline({
           scrollTrigger: {
             trigger: ".hero",
             start: "top top",
             end: "bottom top",
             scrub: 1.5,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            fastScrollEnd: true,
           },
-          y: "50%",
-          scale: 1.1,
-          ease: "none",
         });
 
-        // Parallax for hero title
-        gsap.to(".hero-title", {
-          scrollTrigger: {
-            trigger: ".hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 2,
-          },
-          y: "-60%",
-          scale: 0.9,
-          ease: "none",
-        });
-
-        
+        // heroTimeline
+        //   .fromTo(".hero-bg", 
+        //     { y: "0%", scale: 1 },
+        //     { y: "50%", scale: 1.1, duration: 1, ease: "none" },
+        //     0
+        //   )
+        //   .fromTo(
+        //     ".hero-title",
+        //     { y: "0%", scale: 1, opacity: 1 },
+        //     { y: "-60%", scale: 0.9, opacity: 0, duration: 1, ease: "none" },
+        //     0
+        //   );
 
         // Smooth reveal for games section
         gsap.from(".games", {
@@ -388,6 +386,7 @@ export default {
             start: "top 80%",
             end: "top 20%",
             scrub: 1,
+            invalidateOnRefresh: true,
           },
           opacity: 0.8,
           y: 50,
@@ -486,7 +485,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 * {
   margin: 0;
   padding: 0;

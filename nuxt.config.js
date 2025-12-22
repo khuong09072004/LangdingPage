@@ -35,7 +35,11 @@ export default {
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ["aos/dist/aos.css",'@/assets/css/global.css'],
+  css: [
+    'aos/dist/aos.css',
+    '@/assets/css/global.css',
+    '@/assets/styles/components.css'
+  ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
@@ -53,8 +57,15 @@ export default {
   modules: [],
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
+  build: {
+    extractCSS: true
+  },
 
-  ssr: true,
+  ssr: false,
   target: "static",
+  
+  // Router configuration for static deployment
+  router: {
+    base: '/'
+  },
 };
