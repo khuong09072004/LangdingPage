@@ -7,13 +7,28 @@
           <span class="logo-text">NekSoluton</span>
         </div>
         <nav class="nav">
-          <a href="#home" @click.prevent="scrollToSection('home')">Home</a>
-          <a href="#games" @click.prevent="scrollToSection('games')">About Game</a>
-          <a href="#games" @click.prevent="scrollToSection('games')">Featured Games</a>
+          <a href="#home" @click.prevent="scrollToSection('home')">Home</a>    
+          <a href="#games" @click.prevent="scrollToSection('games')">Games</a>
+          <a href="#about" @click.prevent="scrollToSection('about')">About</a>
           <a href="#contact" @click.prevent="scrollToSection('contact')">Contact</a>
         </nav>
+        <button class="mobile-menu-btn" @click="toggleMobileMenu" :class="{ active: isMobileMenuOpen }">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" :class="{ active: isMobileMenuOpen }">
+      <nav class="mobile-nav">
+        <a href="#home" @click.prevent="scrollToSection('home'); closeMobileMenu()">Home</a>
+        <a href="#games" @click.prevent="scrollToSection('games'); closeMobileMenu()">Games</a>
+        <a href="#about" @click.prevent="scrollToSection('about'); closeMobileMenu()">About</a>
+        <a href="#contact" @click.prevent="scrollToSection('contact'); closeMobileMenu()">Contact</a>
+      </nav>
+    </div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -226,6 +241,36 @@
       </div>
     </section>
 
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="container">
+        <div class="about-content" data-aos="fade-up">
+          <div class="section-badge">WHO WE ARE</div>
+          <h2 class="section-title">Welcome to NekSoluton</h2>
+          <p class="section-description">
+            We are passionate game developers dedicated to creating immersive and
+            engaging gaming experiences that bring joy to players worldwide. From
+            blockchain-powered adventures to idle RPG masterpieces, we craft games
+            that blend cutting-edge technology with captivating gameplay.
+          </p>
+          <div class="stats-grid">
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+              <div class="stat-number">4+</div>
+              <div class="stat-label">Games Published</div>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+              <div class="stat-number">1M+</div>
+              <div class="stat-label">Active Players</div>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+              <div class="stat-number">50K+</div>
+              <div class="stat-label">Community Members</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer id="contact" class="footer">
       <div class="container">
@@ -282,6 +327,7 @@ export default {
     return {
       isScrolled: false,
       showScrollTop: false,
+      isMobileMenuOpen: false,
     };
   },
   mounted() {
@@ -388,6 +434,7 @@ export default {
     if (this.$ScrollTrigger) {
       this.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     }
+    document.body.style.overflow = '';
   },
   methods: {
     scrollToSection(sectionId) {
@@ -423,6 +470,18 @@ export default {
         });
       }
     },
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      if (this.isMobileMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    },
+    closeMobileMenu() {
+      this.isMobileMenuOpen = false;
+      document.body.style.overflow = '';
+    },
   },
 };
 </script>
@@ -440,6 +499,8 @@ html {
 }
 
 body {
+  font-family: 'BoldenVan', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -449,6 +510,8 @@ body {
   color: #fff;
   overflow-x: hidden;
   padding-top: 100vh;
+  font-family: 'BoldenVan', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 300;
 }
 
 /* Header */
@@ -531,6 +594,78 @@ body {
 
 .nav a:hover {
   color: #667eea;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+.mobile-menu-btn span {
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 400px;
+  height: 100vh;
+  background: rgba(10, 10, 15, 0.98);
+  backdrop-filter: blur(20px);
+  z-index: 1001;
+  transition: right 0.3s ease;
+  padding-top: 100px;
+}
+
+.mobile-menu.active {
+  right: 0;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.mobile-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.mobile-nav a:hover {
+  color: #667eea;
+  padding-left: 1rem;
 }
 
 /* Hero Section */
@@ -639,6 +774,80 @@ body {
                0 1px 2px rgba(0, 0, 0, 0.4);
   text-transform: uppercase;
   will-change: transform;
+}
+
+/* About Section */
+.about-section {
+  position: relative;
+  z-index: 10;
+  background: #0a0a0f;
+  padding-top: 2rem;
+  padding-bottom: 8rem;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.about-content {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-badge {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 50px;
+  color: #667eea;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #fff 0%, #667eea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-top: 4rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Games Section */
@@ -882,11 +1091,24 @@ body {
   .hero-title {
     font-size: 3rem;
   }
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
 }
 
 @media (max-width: 768px) {
   .nav {
     display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
   }
 
   .hero-title {
@@ -910,6 +1132,22 @@ body {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-description {
+    font-size: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
   }
 }
 </style>

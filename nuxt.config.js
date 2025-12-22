@@ -17,6 +17,10 @@ export default {
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       { rel: "stylesheet", href: "https://cdn.tailwindcss.com" },
+      { 
+        rel: "stylesheet", 
+        href: "https://fonts.cdnfonts.com/css/boldenvan"
+      },
     ],
     script: [
       { src: "https://cdn.tailwindcss.com" },
