@@ -29,7 +29,7 @@
         <a href="#contact" @click.prevent="scrollToSection('contact'); closeMobileMenu()">Contact</a>
       </nav>
     </div>
-
+    
     <!-- Hero Section -->
     <section id="home" class="hero">
       <div class="hero-bg"></div>
@@ -333,8 +333,7 @@ export default {
   mounted() {
     if (!process.client) return;
 
-    // Enable smooth scrolling CSS
-    document.documentElement.style.scrollBehavior = 'smooth';
+    
 
     const AOS = require("aos");
     AOS.init({
@@ -350,49 +349,14 @@ export default {
     const gsap = this.$gsap;
     const ScrollTrigger = this.$ScrollTrigger;
 
-    if (gsap && ScrollTrigger) {
+    this.$nextTick(() => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      this.initHeroScroll();
+    });
+  });
+});
 
-      this.$nextTick(() => {
-        // Create timeline for hero parallax with better control
-        const heroTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1.5,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            fastScrollEnd: true,
-          },
-        });
-
-        // heroTimeline
-        //   .fromTo(".hero-bg", 
-        //     { y: "0%", scale: 1 },
-        //     { y: "50%", scale: 1.1, duration: 1, ease: "none" },
-        //     0
-        //   )
-        //   .fromTo(
-        //     ".hero-title",
-        //     { y: "0%", scale: 1, opacity: 1 },
-        //     { y: "-60%", scale: 0.9, opacity: 0, duration: 1, ease: "none" },
-        //     0
-        //   );
-
-        // Smooth reveal for games section
-        gsap.from(".games", {
-          scrollTrigger: {
-            trigger: ".games",
-            start: "top 80%",
-            end: "top 20%",
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-          opacity: 0.8,
-          y: 50,
-        });
-      });
-    }
 
     // HEADER OBSERVER
     const headerTrigger = document.createElement("div");
@@ -481,6 +445,72 @@ export default {
       this.isMobileMenuOpen = false;
       document.body.style.overflow = '';
     },
+    initHeroScroll() {
+    const gsap = this.$gsap;
+    const ScrollTrigger = this.$ScrollTrigger;
+
+    if (!gsap || !ScrollTrigger) return;
+
+    // ❗ KILL trigger cũ (tránh double init khi HMR / route)
+    ScrollTrigger.getAll().forEach(t => t.kill());
+    
+    // ❗ Force scroll về đầu trang khi load
+    window.scrollTo(0, 0);
+
+    // Set initial state trước để đảm bảo đúng trạng thái ban đầu
+    gsap.set(".hero-bg", { y: "0%", scale: 1 });
+    gsap.set(".hero-title", { y: "0%", scale: 1, opacity: 1 });
+
+    const heroTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".featured-games",
+        start: "top top",
+        end: "+=100%", // Scroll 100% viewport height
+        scrub: 1.5,
+        invalidateOnRefresh: true,
+        fastScrollEnd: true,
+        onRefresh: (self) => {
+          // Reset về đầu khi refresh
+          if (window.scrollY === 0) {
+            self.scroll(0);
+          }
+        }
+      },
+    });
+
+    heroTimeline
+      .fromTo(
+        ".hero-bg",
+        { y: "0%", scale: 1 },
+        { y: "50%", scale: 1.1, ease: "none", immediateRender: false },
+        0
+      )
+      .fromTo(
+        ".hero-title",
+        { y: "0%", scale: 1, opacity: 1 },
+        { y: "-60%", scale: 0.9, opacity: 0, ease: "none", immediateRender: false },
+        0
+      );
+
+    // Games section animation - dùng fromTo thay vì from
+    gsap.fromTo(".games", 
+      { opacity: 1, y: 0 }, // ❗ Initial state rõ ràng
+      {
+        scrollTrigger: {
+          trigger: ".games",
+          start: "top 80%",
+          end: "top 20%",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+        opacity: 1, // Giữ nguyên, không đổi
+        y: 0,
+      }
+    );
+
+    // ❗ BẮT BUỘC
+    ScrollTrigger.refresh();
+  }
   },
 };
 </script>
@@ -498,7 +528,7 @@ export default {
   background: #0a0a0f;
   color: #fff;
   overflow-x: hidden;
-  padding-top: 100vh;
+  padding-top: 100vh;  
   font-family: 'BoldenVan', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 300;
 }
@@ -676,7 +706,7 @@ export default {
   z-index: 1;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0);
+  transform: translateZ(0) scale(1); /* ❗ Initial state trong CSS */
 }
 
 .hero-bg::before {
@@ -735,9 +765,10 @@ export default {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4),
                0 4px 8px rgba(0, 0, 0, 0.2);
   letter-spacing: 1px;
-  will-change: transform;
+  will-change: transform, opacity;
   margin: 0;
-  opacity: 0.95;
+  opacity: 1; /* ❗ Đảm bảo opacity = 1 ban đầu */
+  transform: translateY(0) scale(1); /* ❗ Initial state */
 }
 
 @keyframes gradient {

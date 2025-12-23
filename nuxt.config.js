@@ -16,7 +16,6 @@ export default {
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-      { rel: "stylesheet", href: "https://cdn.tailwindcss.com" },
       { 
         rel: "stylesheet", 
         href: "https://fonts.cdnfonts.com/css/boldenvan"
@@ -24,13 +23,7 @@ export default {
     ],
     script: [
       { src: "https://cdn.tailwindcss.com" },
-      { src: "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" },
-      {
-        src: "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js",
-      },
-      {
-        src: "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollSmoother.min.js",
-      },
+      // GSAP được load từ npm package qua plugins/gsap.js
     ],
   },
 
